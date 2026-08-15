@@ -1,0 +1,147 @@
+{
+  "info": {
+    "_postman_id": "1a03e995-b122-48a5-bf0d-a077641190d7",
+    "name": "Data Driven Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57056917",
+    "_collection_link": "https://go.postman.co/collection/57056917-1a03e995-b122-48a5-bf0d-a077641190d7?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "CreateBookingAPI Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Parse JSON Response\r",
+              "var responseBody = pm.response.json();\r",
+              "\r",
+              "// Save Booking ID to Environment Variable for future requests\r",
+              "if (responseBody.bookingid) {\r",
+              "    pm.environment.set(\"booking_id\", responseBody.bookingid);\r",
+              "}\r",
+              "\r",
+              "// 1. Verify Status Code is 200 OK\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "// 2. Verify Data Format is JSON\r",
+              "pm.test(\"Verify that the response data format is showing as JSON format or not\", function(){\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "// 3. Assertion for First Name\r",
+              "pm.test(\"Verify that the first name is showing as expected or not\", function(){\r",
+              "    pm.expect(pm.environment.get(\"fName\")).to.eql(responseBody.booking.firstname);\r",
+              "});\r",
+              "\r",
+              "// 4. Assertion for Last Name\r",
+              "pm.test(\"Verify that the last name is showing as expected or not\", function(){\r",
+              "    pm.expect(pm.environment.get(\"lName\")).to.eql(responseBody.booking.lastname);\r",
+              "});\r",
+              "\r",
+              "// 5. Assertion for Total Price\r",
+              "pm.test(\"Verify that the totalprice is showing as expected or not\", function(){\r",
+              "    pm.expect(String(pm.environment.get(\"tPrice\"))).to.eql(String(responseBody.booking.totalprice));\r",
+              "});\r",
+              "\r",
+              "// 6. Assertion for Deposit Paid\r",
+              "pm.test(\"Verify that the depositpaid is showing as expected or not\", function(){\r",
+              "    pm.expect(String(pm.environment.get(\"dPaid\"))).to.eql(String(responseBody.booking.depositpaid));\r",
+              "});\r",
+              "\r",
+              "// 7. Assertion for Check-in Date\r",
+              "pm.test(\"Verify that the checkin date is showing as expected or not\", function(){\r",
+              "    pm.expect(pm.environment.get(\"cinDate\")).to.eql(responseBody.booking.bookingdates.checkin);\r",
+              "});\r",
+              "\r",
+              "// 8. Assertion for Check-out Date\r",
+              "pm.test(\"Verify that the checkout date is showing as expected or not\", function(){\r",
+              "    pm.expect(pm.environment.get(\"coutDate\")).to.eql(responseBody.booking.bookingdates.checkout);\r",
+              "});\r",
+              "\r",
+              "// 9. Assertion for Additional Needs\r",
+              "pm.test(\"Verify that the additionalneeds is showing as expected or not\", function(){\r",
+              "    pm.expect(pm.environment.get(\"aNeeds\")).to.eql(responseBody.booking.additionalneeds);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// For the generate first name\r",
+              "var firstName = pm.iterationData.get(\"firstname\");\r",
+              "pm.environment.set(\"fName\", firstName);\r",
+              "\r",
+              "// For the generate last name\r",
+              "var lastName = pm.iterationData.get(\"lastname\");\r",
+              "pm.environment.set(\"lName\", lastName);\r",
+              "\r",
+              "// For the generate totalprice\r",
+              "var totalPrice = pm.iterationData.get(\"totalprice\");\r",
+              "pm.environment.set(\"tPrice\", totalPrice);\r",
+              "\r",
+              "// For the generate depositpaid\r",
+              "var depositPaid = pm.iterationData.get(\"depositpaid\");\r",
+              "pm.environment.set(\"dPaid\", depositPaid);\r",
+              "\r",
+              "// For the generate checkin & checkout\r",
+              "pm.environment.set(\"cinDate\", pm.iterationData.get(\"checkin\"));\r",
+              "pm.environment.set(\"coutDate\", pm.iterationData.get(\"checkout\"));\r",
+              "\r",
+              "// For the generate additionalneeds\r",
+              "pm.environment.set(\"aNeeds\", pm.iterationData.get(\"additionalneeds\"));"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstname\": \"{{fName}}\",\r\n    \"lastname\": \"{{lName}}\",\r\n    \"totalprice\": {{tPrice}},\r\n    \"depositpaid\": {{dPaid}},\r\n    \"bookingdates\": {\r\n        \"checkin\": \"{{cinDate}}\",\r\n        \"checkout\": \"{{coutDate}}\"\r\n    },\r\n    \"additionalneeds\": \"{{aNeeds}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/booking",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

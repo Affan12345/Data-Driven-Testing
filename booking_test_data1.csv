@@ -1,0 +1,6 @@
+﻿firstname,lastname,totalprice,depositpaid,checkin,checkout,additionalneeds
+Rafid,Affan,550,true,2025-03-28,2025-04-03,Lunch
+Mehnaz,Shuchi,720,false,2025-03-30,2025-04-05,Breakfast
+Shadab,Khan,505,true,2025-05-03,2025-05-08,Dinner
+Jabir,Ibne,410,false,2025-03-30,2025-04-05,Lunch
+Musa,Kharizmi,630,true,2025-03-28,2025-04-03,Dinner
